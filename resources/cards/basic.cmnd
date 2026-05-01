@@ -1,0 +1,9 @@
+Beams:idA = 2212
+Beams:idB = 2212
+Beams:eCM = 13600.
+
+HardQCD:all = on
+PhaseSpace:pTHatMin = 20.0
+
+Next:numberCount = 1000
+Main:timesAllowErrors = 5
