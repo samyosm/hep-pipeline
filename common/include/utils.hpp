@@ -2,5 +2,5 @@
 
 namespace hepp {
 void showProgressBar(const int &i, const int &total, const char *name = "");
-// void showProgressBar(const float &progress);
+void ensurePythiaData();
 } // namespace hepp

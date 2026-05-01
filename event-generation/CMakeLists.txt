@@ -1,17 +1,39 @@
 project(PythiaLab)
 
-execute_process(COMMAND pythia8-config --prefix OUTPUT_VARIABLE PYTHIA8_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-execute_process(COMMAND pythia8-config --includedir OUTPUT_VARIABLE PYTHIA8_INCLUDE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
-execute_process(COMMAND pythia8-config --libs OUTPUT_VARIABLE PYTHIA8_LIBS_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-string(REPLACE "-l" "" PYTHIA8_LIBS_CLEAN "${PYTHIA8_LIBS_FLAGS}")
-separate_arguments(PYTHIA8_LIBS_LIST NATIVE_COMMAND "${PYTHIA8_LIBS_CLEAN}")
-
 add_executable(gen_events src/main.cc)
 
-target_include_directories(gen_events PRIVATE ${PYTHIA8_INCLUDE_DIR})
+# HepMC3
+find_package(HepMC3 REQUIRED)
+target_link_libraries(gen_events PRIVATE HepMC3::HepMC3)
 
-target_link_libraries(gen_events PRIVATE ${PYTHIA8_LIBS_LIST} hepp_utils z dl)
+# Pythia8
+find_program(PYTHIA8_CONFIG pythia8-config REQUIRED)
 
-message(STATUS "Using Pythia8 from: ${PYTHIA8_PREFIX}")
+execute_process(
+    COMMAND ${PYTHIA8_CONFIG} --cxxflags
+    OUTPUT_VARIABLE PYTHIA8_CXXFLAGS
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND ${PYTHIA8_CONFIG} --ldflags --libs
+    OUTPUT_VARIABLE PYTHIA8_LDFLAGS
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+separate_arguments(PYTHIA8_CXXFLAGS)
+separate_arguments(PYTHIA8_LDFLAGS)
+
+target_compile_options(gen_events PRIVATE ${PYTHIA8_CXXFLAGS})
+target_link_libraries(gen_events PRIVATE ${PYTHIA8_LDFLAGS})
+
+# OpenMp
+find_package(OpenMP REQUIRED)
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(gen_events PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+# Others
+target_link_libraries(gen_events PRIVATE hepp_utils)
 

@@ -1,14 +1,20 @@
 #include "Pythia8/Pythia.h"
+#include "Pythia8/PythiaParallel.h"
+#include "Pythia8Plugins/HepMC3.h"
 #include "utils.hpp"
-#include <fstream>
+#include <HepMC3/WriterAscii.h>
+#include <atomic>
 #include <iostream>
+#include <mutex>
 
 using namespace Pythia8;
 
 int main() {
-  Pythia pythia;
+  hepp::ensurePythiaData();
+  PythiaParallel pythia;
+  pythia.readString("Parallelism:numThreads = 8");
 
-  if (!pythia.readFile("resources/cards/basic.cmnd")) {
+  if (!pythia.readFile("resources/cards/main.cmnd")) {
     std::cerr << "Error: couldn't read command file!" << std::endl;
     return 1;
   }
@@ -18,37 +24,33 @@ int main() {
     return 1;
   }
 
-  std::ofstream file("data/output.csv");
-  file << "ID,count\n";
+  int nEvents = pythia.settings.mode("Main:numberOfEvents");
 
-  int nEvents = pythia.mode("Next:numberCount");
-  double totalEnergy = 0.0;
-  Vec4 momentum = 0.0;
-  int finalParticleCount = 0;
+  HepMC3::Pythia8ToHepMC3 toHepMC;
+  HepMC3::WriterAscii ascii_io("data/events.hepmc");
+  std::mutex fileMutex;
+  std::atomic<int> completedEvents{0};
 
-  for (int iEvent = 0; iEvent < nEvents; ++iEvent) {
-    if (!pythia.next())
-      continue;
+  pythia.run([&](Pythia *pythiaPtr) {
+    HepMC3::Pythia8ToHepMC3 toHepMC;
+    HepMC3::GenEvent hepmcevt(HepMC3::Units::GEV, HepMC3::Units::MM);
 
-    hepp::showProgressBar(iEvent, nEvents, "Particle Generaton");
+    toHepMC.fill_next_event(*pythiaPtr, &hepmcevt);
 
-    int size = pythia.event.size();
-    file << iEvent << "," << size << "\n";
-
-    for (auto e : pythia.event) {
-      if (e.isFinal()) {
-        totalEnergy += e.e();
-        momentum += e.p();
-        finalParticleCount++;
-      }
+    {
+      std::lock_guard<std::mutex> lock(fileMutex);
+      ascii_io.write_event(hepmcevt);
     }
-  }
 
-  std::cout << "Final partical count: " << finalParticleCount << std::endl;
-  std::cout << "Total energy: " << totalEnergy << std::endl;
-  std::cout << "Total momentum: " << momentum << std::endl;
+    int current = ++completedEvents;
 
-  file.close();
+    if (current % 100 == 0 || current == nEvents) {
+      std::lock_guard<std::mutex> lock(fileMutex);
+      hepp::showProgressBar(current, nEvents, "Parallel Generation");
+    }
+  });
+
+  ascii_io.close();
   pythia.stat();
 
   return 0;

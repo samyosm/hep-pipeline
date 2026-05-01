@@ -7,3 +7,6 @@ dependencies:
   - marimo
   - matplotlib
   - pandas
+  - pythia8
+  - hepmc3
+  
