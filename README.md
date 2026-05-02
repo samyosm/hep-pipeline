@@ -47,6 +47,7 @@ You are now ready to use the different components.
 Run the following command to generate `data/events.hepmc`:
 
 ```sh
+mkdir data
 ./build/event-generation/gen_events
 ```
 
