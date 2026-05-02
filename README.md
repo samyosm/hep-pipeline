@@ -1,6 +1,7 @@
 # High Energy Physics Pipeline
 
 ![Build Status](https://github.com/samyosm/hep-pipeline/actions/workflows/build.yml/badge.svg)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19960730.svg)](https://doi.org/10.5281/zenodo.19960730)
 
 ## Overview
 
