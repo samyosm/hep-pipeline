@@ -1,5 +1,7 @@
 # High Energy Physics Pipeline
 
+![Build Status](https://github.com/samyosm/hep-pipeline/actions/workflows/build.yml/badge.svg)
+
 ## Overview
 
 This repository contains a complete, end-to-end implementation of a High Energy Physics (HEP) analysis pipeline, inspired by workflows used at CERN.
