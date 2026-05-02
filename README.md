@@ -9,6 +9,13 @@ This repository contains a complete, end-to-end implementation of a High Energy 
 
 The goal of this project is to gain practical, hands-on experience with every stage of the pipeline while reproducing known physics results.
 
+## Datasets
+
+The simulation results for this project are published Zenodo. This dataset provides set of simulated proton-proton events at 13.6 TeV (LHC Run 3 conditions).
+
+**Citation:**
+> Rahmani, S. (2026). HepMC3 Events: Hard QCD with pT greater than 20 GeV in pp Collisions at 13.6 TeV. Zenodo. [https://doi.org/10.5281/zenodo.19960730](https://doi.org/10.5281/zenodo.19960730)
+
 ## Pipeline Structure
 
 - [x] 1. Event generation
@@ -51,6 +58,8 @@ Run the following command to generate `data/events.hepmc`:
 mkdir data
 ./build/event-generation/gen_events
 ```
+
+Note: It generates 100,000 events so may produce files up to 23GB in size and take some time. The relevent data can also be downloaded from the published dataset.
 
 
 ## LICENSE
