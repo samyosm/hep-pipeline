@@ -11,7 +11,7 @@ The goal of this project is to gain practical, hands-on experience with every st
 
 ## Datasets
 
-The simulation results for this project are published Zenodo. This dataset provides set of simulated proton-proton events at 13.6 TeV (LHC Run 3 conditions).
+The simulation results for this project are published on Zenodo. This dataset provides set of simulated proton-proton events at 13.6 TeV (LHC Run 3 conditions).
 
 **Citation:**
 > Rahmani, S. (2026). HepMC3 Events: Hard QCD with pT greater than 20 GeV in pp Collisions at 13.6 TeV. Zenodo. [https://doi.org/10.5281/zenodo.19960730](https://doi.org/10.5281/zenodo.19960730)
