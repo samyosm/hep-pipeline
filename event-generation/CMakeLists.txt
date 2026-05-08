@@ -1,4 +1,4 @@
-project(PythiaLab)
+project(EventGeneration)
 
 add_executable(gen_events src/main.cc)
 

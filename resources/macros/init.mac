@@ -1,0 +1,17 @@
+/run/initialize
+
+/vis/open OGL 600x600-0+0
+
+/vis/viewer/set/autoRefresh false
+/vis/drawVolume
+/vis/scene/add/axes 0 0 0 10 cm
+/vis/scene/add/trajectories smooth
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/viewpointThetaPhi 45 45 deg
+/vis/viewer/zoom 1.2
+/vis/viewer/set/style wireframe
+/vis/viewer/set/autoRefresh true
+
+/run/verbose 1
+/event/verbose 1
+/tracking/verbose 1
