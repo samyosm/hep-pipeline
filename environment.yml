@@ -9,4 +9,9 @@ dependencies:
   - pandas
   - pythia8
   - hepmc3
+  - geant4
+  - qt-main
+  - xerces-c
+  - cmake
+  - make
   
