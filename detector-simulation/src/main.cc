@@ -22,7 +22,6 @@ int main(int argc, char **argv) {
 
   G4VisManager *visManager = new G4VisExecutive;
   visManager->Initialize();
-
   runManager->Initialize();
 
   G4UImanager *UI = G4UImanager::GetUIpointer();

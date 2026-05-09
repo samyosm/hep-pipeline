@@ -8,7 +8,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
 public:
   DetectorConstruction();
   virtual ~DetectorConstruction();
-
-public:
   virtual G4VPhysicalVolume *Construct();
+  virtual void ConstructSDandField();
 };

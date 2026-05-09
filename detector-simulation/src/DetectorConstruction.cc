@@ -1,10 +1,15 @@
 #include "DetectorConstruction.hh"
 
 #include "G4Box.hh"
+#include "G4FieldManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4NistManager.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4TransportationManager.hh"
+#include "G4UniformMagField.hh"
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <G4ThreeVector.hh>
 #include <G4Tubs.hh>
 #include <G4Types.hh>
 #include <G4VPhysicalVolume.hh>
@@ -91,4 +96,15 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   }
 
   return physWorld;
+}
+
+void DetectorConstruction::ConstructSDandField() {
+  G4MagneticField *magField =
+      new G4UniformMagField(G4ThreeVector(0.0, 0.0, 2.0 * tesla));
+
+  G4FieldManager *fieldManager =
+      G4TransportationManager::GetTransportationManager()->GetFieldManager();
+
+  fieldManager->SetDetectorField(magField);
+  fieldManager->CreateChordFinder(magField);
 }
