@@ -44,7 +44,6 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   G4double active_thickness = 2. * mm;
   G4double passive_thickness = 4. * mm;
-  G4double layer_thickness = (active_thickness + passive_thickness);
 
   G4double hz = 0.75 * m; // 1.5 m long detectors
   G4double start_angle = 0. * deg;

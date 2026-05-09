@@ -14,4 +14,6 @@ dependencies:
   - xerces-c
   - cmake
   - make
+  - root
+  - uproot
   

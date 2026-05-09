@@ -14,5 +14,5 @@
 /run/printProgress 10
 
 # execution
-/run/beamOn 160 ## NOTE: Should be multiples of 8 (number of cores)
+/run/beamOn 1000 ## NOTE: Should be multiples of 8 (number of cores)
 
