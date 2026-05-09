@@ -87,7 +87,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
     activeLogical->SetVisAttributes(activeVis);
 
     G4VPhysicalVolume *activePhysical =
-        new G4PVPlacement(0, G4ThreeVector(), activeLogical, "activePhysical",
+        new G4PVPlacement(0, G4ThreeVector(), activeLogical, "ActivePhysical",
                           logicWorld, false, 2 * i + 1); // NOTE: Odd = Active
   }
 

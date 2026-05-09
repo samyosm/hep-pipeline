@@ -10,6 +10,9 @@
 /tracking/verbose 0
 /control/verbose 0
 
+# Progress
+/run/printProgress 10
+
 # execution
-/run/beamOn 8 ## NOTE: Should be multiples of 8 (number of cores)
+/run/beamOn 160 ## NOTE: Should be multiples of 8 (number of cores)
 
