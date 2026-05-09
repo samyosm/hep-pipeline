@@ -2,6 +2,7 @@
 
 #include "G4ParticleGun.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "HepMC3/ReaderAscii.h"
 
 class G4Event;
 
@@ -13,5 +14,6 @@ public:
   virtual void GeneratePrimaries(G4Event *anEvent) override;
 
 private:
-  G4ParticleGun *fParticleGun;
+  // G4ParticleGun *fParticleGun;
+  HepMC3::ReaderAscii *fReader;
 };

@@ -1,17 +1,22 @@
+# initialization
 /run/initialize
 
-/vis/open OGLI 
-
-/vis/viewer/set/autoRefresh false
-/vis/drawVolume
+# visualisation
+/vis/open ogli
+/vis/viewer/set/autorefresh false
+/vis/drawvolume
 /vis/scene/add/axes 0 0 0 10 cm
 /vis/scene/add/trajectories smooth
-/vis/scene/endOfEventAction accumulate
-/vis/viewer/set/viewpointThetaPhi 45 45 deg
-/vis/viewer/zoom 1.2
+/vis/scene/endofeventaction accumulate 100  # limit accumulation to 10 events
+/vis/viewer/set/viewpointthetaphi 45 45 deg
 /vis/viewer/set/style wireframe
-/vis/viewer/set/autoRefresh true
+/vis/viewer/set/autorefresh true
 
+# progress tracking
+/run/printprogress 100
+
+# verbosity
 /run/verbose 1
-/event/verbose 1
-/tracking/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+

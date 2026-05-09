@@ -1,0 +1,15 @@
+# initialization
+/run/initialize
+
+# optimization
+/run/setCut 1.0 mm
+
+# verbosity
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/control/verbose 0
+
+# execution
+/run/beamOn 8 ## NOTE: Should be multiples of 8 (number of cores)
+
