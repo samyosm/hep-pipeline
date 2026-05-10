@@ -1,0 +1,48 @@
+[detector]
+inner_chamber_radius = 500
+magnetic_field_strength = 2.0
+
+[detector.tracker]
+enabled = true
+
+layer_count = 10
+
+active_width = 0.2   # Silicon scintillator
+passice_width = 14.8 # Galatic Air
+
+active_material = "G4_Si"
+passive_material = "G4_Galactic"
+
+[detector.gap1]
+enabled = true
+
+width = 350
+material = "G4_Galactic"
+
+[detector.ecal]
+enabled = true
+
+layour_count = 60
+
+passive_width = 2.5
+active_width = 2.0
+
+passive_material = "G4_Pb"
+active_material = "G4_POLYSTYRENE"
+
+[detector.gap2]
+enabled = true
+
+width = 500
+material = "G4_Galactic"
+
+[detector.hcal]
+enabled = true
+
+layour_count = 96
+
+passive_width = 14.0 # Iron absorber
+active_width = 2.0   # Polystyrene scintillator
+
+active_material = "G4_POLYSTYRENE"
+passive_material = "G4_Fe"

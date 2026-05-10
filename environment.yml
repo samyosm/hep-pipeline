@@ -13,3 +13,5 @@ dependencies:
   - qt-main
   - root
   - uproot
+  - tomlplusplus
+  - toml

@@ -1,7 +1,6 @@
 #include "ActionInitialization.hh"
 #include "DetectorConstruction.hh"
 #include "FTFP_BERT.hh"
-
 #include "G4RunManagerFactory.hh"
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
