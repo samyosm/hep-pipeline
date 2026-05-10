@@ -8,7 +8,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4TransportationManager.hh"
 #include "G4UniformMagField.hh"
-#include <CLHEP/Units/SystemOfUnits.h>
 #include <G4ThreeVector.hh>
 #include <G4Tubs.hh>
 #include <G4Types.hh>
