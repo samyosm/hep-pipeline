@@ -68,11 +68,25 @@ Run the following command to generate various root files (1 for each core) in `d
 ./build/detector-simulation/simulate_detection resources/macros/prod.mac
 ```
 
-<p align="center">
-  <img src="docs/assets/tracker.png" width="32%" />
-  <img src="docs/assets/tracker-ecal.png" width="32%" />
-  <img src="docs/assets/tracker-ecal-hcal.png" width="32%" />
-</p>
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker.png" width="250" height="250" /><br/>
+      <sub>Tracker only</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker+ecal.png" width="250" height="250" /><br/>
+      <sub>Tracker + ECAL</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker+ecal+hcal.png" width="250" height="250" /><br/>
+      <sub>Tracker + ECAL + HCAL</sub>
+    </td>
+  </tr>
+</table>
+
+
 
 ## LICENSE
 
