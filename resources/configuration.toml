@@ -1,8 +1,8 @@
 [detector]
-world_half_size = 4000
+world_half_size = 4000         ## mm
 world_material = "G4_Galactic"
 
-hz = 750
+hz = 4000
 
 inner_chamber_radius = 500
 
@@ -23,7 +23,6 @@ passive_material = "G4_Galactic"
 enabled = true
 
 width = 350
-material = "G4_Galactic"
 
 [detector.ecal]
 enabled = true
@@ -40,7 +39,6 @@ active_material = "G4_POLYSTYRENE"
 enabled = true
 
 width = 500
-material = "G4_Galactic"
 
 [detector.hcal]
 enabled = true
