@@ -1,15 +1,16 @@
 #include "config.hh"
+#include "toml.hpp"
 
 namespace hepp {
 
 Config *Config::config_ = nullptr;
 
-Config *Config::GetConfig() {
+toml::parse_result *Config::GetConfig() {
   if (config_ == nullptr) {
     config_ = new Config();
   }
 
-  return config_;
+  return &config_->result_;
 }
 
 } // namespace hepp

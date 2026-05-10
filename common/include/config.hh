@@ -13,7 +13,7 @@ protected:
 public:
   Config(Config &other) = delete;
   void operator=(const Config &) = delete;
-  static Config *GetConfig();
+  static toml::parse_result *GetConfig();
   toml::parse_result config() const { return result_; }
 };
 
