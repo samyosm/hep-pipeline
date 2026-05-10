@@ -162,7 +162,7 @@ void DetectorConstruction::AddTubeLayer(G4String name, G4double width,
                                         G4Material *mat,
                                         G4LogicalVolume *logicWorld) {
   auto &config = *hepp::Config::GetConfig();
-  G4double hz = config["detector"]["hcal"]["hz"].value_or(750.0) * mm;
+  G4double hz = config["detector"]["hz"].value_or(750.0) * mm;
 
   G4Tubs *tube = new G4Tubs(name + "-tube", current_radius,
                             current_radius + width, hz, 0 * deg, 360 * deg);

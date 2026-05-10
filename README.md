@@ -61,7 +61,20 @@ mkdir data
 
 Note: It generates 100,000 events so may produce files up to 23GB in size and take some time. The relevent data can also be downloaded from the published dataset.
 
+### Detector simulation
+
+Run the following command to generate various root files (1 for each core) in `data/`:
+```sh
+./build/detector-simulation/simulate_detection resources/macros/prod.mac
+```
+
+<p align="center">
+  <img src="docs/assets/tracker.png" width="32%" />
+  <img src="docs/assets/tracker-ecal.png" width="32%" />
+  <img src="docs/assets/tracker-ecal-hcal.png" width="32%" />
+</p>
 
 ## LICENSE
 
 [MIT](LICENSE) © Samy Rahmani
+

@@ -2,7 +2,7 @@
 world_half_size = 4000         ## mm
 world_material = "G4_Galactic"
 
-hz = 4000
+hz = 3800
 
 inner_chamber_radius = 500
 
@@ -27,7 +27,7 @@ width = 350
 [detector.ecal]
 enabled = true
 
-layour_count = 60
+layer_count = 60
 
 passive_width = 2.5
 active_width = 2.0
@@ -43,7 +43,7 @@ width = 500
 [detector.hcal]
 enabled = true
 
-layour_count = 96
+layer_count = 96
 
 passive_width = 14.0 # Iron absorber
 active_width = 2.0   # Polystyrene scintillator
