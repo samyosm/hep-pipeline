@@ -6,15 +6,15 @@ hz = 3800
 
 inner_chamber_radius = 500
 
-magnetic_field_strength = 2.0
 
 [detector.tracker]
 enabled = true
 
+magnetic_field_strength = 2.0
 layer_count = 10
 
-active_width = 0.2   # Silicon scintillator
-passice_width = 14.8 # Galatic Air
+active_width = 0.2    # Silicon scintillator
+passivee_width = 14.8 # Galatic Air
 
 active_material = "G4_Si"
 passive_material = "G4_Galactic"
@@ -25,7 +25,7 @@ enabled = true
 width = 350
 
 [detector.ecal]
-enabled = true
+enabled = false
 
 layer_count = 60
 
@@ -41,7 +41,7 @@ enabled = true
 width = 500
 
 [detector.hcal]
-enabled = true
+enabled = false
 
 layer_count = 96
 

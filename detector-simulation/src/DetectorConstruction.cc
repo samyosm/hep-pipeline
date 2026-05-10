@@ -21,6 +21,7 @@ DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction() {
       (*hepp::Config::GetConfig())["detector"]["inner_chamber_radius"].value_or(
           0.0);
   layerCount = 0;
+  magnetic_requiring_volumes = std::vector<G4LogicalVolume *>();
 }
 DetectorConstruction::~DetectorConstruction() {}
 
@@ -49,8 +50,32 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   if (trackerEnabled) {
     auto layerCountLocal =
         config["detector"]["tracker"]["layerCount"].value_or(10);
+
+    G4double tracker_inner =
+        config["detector"]["inner_chamber_radius"].value_or(500) * mm;
+    G4double active_width =
+        config["detector"]["tracker"]["active_width"].value_or(14.8) * mm;
+    G4double passive_width =
+        config["detector"]["tracker"]["passive_width"].value_or(0.2) * mm;
+
+    auto tracker_outer =
+        tracker_inner + layerCountLocal * (active_width + passive_width);
+
+    G4double hz = config["detector"]["hz"].value_or(750.0) * mm;
+
+    G4Tubs *solidTrackerContainer = new G4Tubs(
+        "TrackerContainer", 0, tracker_outer, hz, 0 * deg, 360 * deg);
+
+    auto logicTrackerContainer =
+        new G4LogicalVolume(solidTrackerContainer, air_mat, "TrackerContainer");
+    G4VPhysicalVolume *physicalTrackerContainer = new G4PVPlacement(
+        0, G4ThreeVector(), logicTrackerContainer, "TrackerContainerPhysical",
+        logicWorld, false, layerCount++);
+
+    magnetic_requiring_volumes.push_back(logicTrackerContainer);
+
     for (size_t i = 0; i < (size_t)layerCountLocal; i++) {
-      AddTrackerLayer(logicWorld);
+      AddTrackerLayer(logicTrackerContainer);
     }
   }
 
@@ -146,9 +171,9 @@ void DetectorConstruction::AddECalLayer(G4LogicalVolume *logicWorld) {
       config["detector"]["ecal"]["passive_width"].value_or(2.5) * mm;
 
   G4String passive_material =
-      config["detector"]["hcal"]["passive_material"].value_or("G4_Fe");
+      config["detector"]["ecal"]["passive_material"].value_or("G4_Fe");
   G4String active_material =
-      config["detector"]["hcal"]["active_material"].value_or("G4_POLYSTYRENE");
+      config["detector"]["ecal"]["active_material"].value_or("G4_POLYSTYRENE");
 
   G4NistManager *nist = G4NistManager::Instance();
   G4Material *active_mat = nist->FindOrBuildMaterial(active_material);
@@ -160,7 +185,8 @@ void DetectorConstruction::AddECalLayer(G4LogicalVolume *logicWorld) {
 
 void DetectorConstruction::AddTubeLayer(G4String name, G4double width,
                                         G4Material *mat,
-                                        G4LogicalVolume *logicWorld) {
+                                        G4LogicalVolume *logicWorld,
+                                        G4bool with_magfield) {
   auto &config = *hepp::Config::GetConfig();
   G4double hz = config["detector"]["hz"].value_or(750.0) * mm;
 
@@ -172,18 +198,32 @@ void DetectorConstruction::AddTubeLayer(G4String name, G4double width,
   G4LogicalVolume *logical = new G4LogicalVolume(tube, mat, name + "-logical");
   // logical->SetVisAttributes(activeVis); // TODO: Add visual
 
+  if (with_magfield) {
+    magnetic_requiring_volumes.push_back(logical);
+  }
+
   G4VPhysicalVolume *physical =
       new G4PVPlacement(0, G4ThreeVector(), logical, name + "-physical",
                         logicWorld, false, layerCount++);
 }
 
 void DetectorConstruction::ConstructSDandField() {
-  G4MagneticField *magField =
-      new G4UniformMagField(G4ThreeVector(0.0, 0.0, 2.0 * tesla));
+  auto &config = *hepp::Config::GetConfig();
+  G4double strength =
+      config["detector"]["tracker"]["magnetic_field_strength"].value_or(2) *
+      tesla;
 
-  G4FieldManager *fieldManager =
-      G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  G4MagneticField *magField =
+      new G4UniformMagField(G4ThreeVector(0.0, 0.0, strength));
+
+  G4FieldManager *fieldManager = new G4FieldManager();
 
   fieldManager->SetDetectorField(magField);
   fieldManager->CreateChordFinder(magField);
+
+  for (G4LogicalVolume *volume : magnetic_requiring_volumes) {
+    G4cout << "Adding magnetic field of " << strength << " teslas to "
+           << volume->GetName() << G4endl;
+    volume->SetFieldManager(fieldManager, true);
+  }
 }
