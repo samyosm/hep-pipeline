@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   }
 
   auto runManager = G4RunManagerFactory::CreateRunManager();
-  runManager->SetNumberOfThreads(20);
+  runManager->SetNumberOfThreads(8);
 
   runManager->SetUserInitialization(new DetectorConstruction);
   runManager->SetUserInitialization(new FTFP_BERT);

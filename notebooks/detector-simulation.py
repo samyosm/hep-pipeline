@@ -6,50 +6,80 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    import marimo as mo
-    import uproot
-    import pandas as pd
-    import numpy as np
-
-    return (pd,)
-
-
-@app.cell
-def _():
-    import uproot
     import matplotlib.pyplot as plt
-    import pandas as pd
-    from collections import Counter
+    import numpy as np
+    import uproot
+    import ROOT
 
-    file_path = "data/detector_simulation.root"
+    import marimo as mo
 
-    pdg_counts = Counter()
-
-
-    for chunk in uproot.iterate(f"{file_path}:Steps", filter_names=["PDG"], step_size="500MB"):
-        counts = pd.Series(chunk["PDG"]).value_counts()
-        for pdg, count in counts.items():
-            pdg_counts[pdg] += count
-
-    pdg_counts
-    return pd, pdg_counts, plt
+    return ROOT, mo, np, plt
 
 
 @app.cell
-def _(pd, pdg_counts, plt):
-    from particle import Particle
+def _(mo):
+    form = mo.md("{bins} {particle_pdg}").batch(
+        bins=mo.ui.number(start=0, value=200, label="Bin count"),
+        particle_pdg=mo.ui.number(value=11, label="Particle PDG")
+    ).form()
+    form
+    return (form,)
 
-    top_pdgs = pd.Series(pdg_counts).sort_values(ascending=False)
 
-    labels = [Particle.from_pdgid(i).name for i in top_pdgs.index]
+@app.cell
+def _(form):
+    bins = form.value["bins"]
+    particle_pdg = form.value["particle_pdg"]
+    return bins, particle_pdg
 
-    plt.figure(figsize=(10, 16))
-    plt.barh(labels, top_pdgs.values)
-    plt.xscale('log')
-    plt.ylabel("Particle")
-    plt.xlabel("Number of hits")
-    plt.title("Hit count per particle")
-    plt.show()
+
+@app.cell
+def _(ROOT, bins, particle_pdg):
+    ROOT.EnableImplicitMT()
+
+    df = ROOT.RDataFrame("Steps", "data/detector_simulation.root")
+
+    h = df\
+        .Filter(f"PDG == {particle_pdg}")\
+        .Histo2D(("h", "", bins, -1500, 1500, bins, -1500, 1500),"X", "Y", "Edep")\
+            .GetValue()
+    return (h,)
+
+
+@app.cell
+def _(h, np):
+    nx = h.GetNbinsX()
+    ny = h.GetNbinsY()
+
+    H = np.zeros((nx, ny))
+
+    for i in range(nx):
+        for j in range(ny):
+            H[i, j] = h.GetBinContent(i+1, j+1)
+    return (H,)
+
+
+@app.cell
+def _(H, mo, plt):
+    from matplotlib.colors import LogNorm
+
+    plt.figure(figsize=(8,6), dpi=300)
+
+    plt.imshow(
+        H.T,
+        aspect="equal",
+        origin="lower",
+        norm=LogNorm(),
+            cmap="inferno"
+    )
+
+    plt.colorbar(label="Energy deposit (log scale)")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Detector energy map (XY, log scale)")
+
+    ax = mo.ui.matplotlib(plt.gca())
+    ax
     return
 
 

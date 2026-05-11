@@ -1,5 +1,4 @@
 #include "DetectorConstruction.hh"
-
 #include "G4Box.hh"
 #include "G4FieldManager.hh"
 #include "G4LogicalVolume.hh"
@@ -14,12 +13,12 @@
 #include <G4ThreeVector.hh>
 #include <G4Tubs.hh>
 #include <G4VPhysicalVolume.hh>
-#include <G4VisAttributes.hh>
 
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction() {
   current_radius =
       (*hepp::Config::GetConfig())["detector"]["inner_chamber_radius"].value_or(
-          0.0);
+          0.0) *
+      mm;
   layerCount = 0;
   magnetic_requiring_volumes = std::vector<G4LogicalVolume *>();
 }
@@ -54,9 +53,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
     G4double tracker_inner =
         config["detector"]["inner_chamber_radius"].value_or(500) * mm;
     G4double active_width =
-        config["detector"]["tracker"]["active_width"].value_or(14.8) * mm;
+        config["detector"]["tracker"]["active_width"].value_or(0.2) * mm;
     G4double passive_width =
-        config["detector"]["tracker"]["passive_width"].value_or(0.2) * mm;
+        config["detector"]["tracker"]["passive_width"].value_or(14.8) * mm;
 
     auto tracker_outer =
         tracker_inner + layerCountLocal * (active_width + passive_width);
@@ -190,8 +189,10 @@ void DetectorConstruction::AddTubeLayer(G4String name, G4double width,
   auto &config = *hepp::Config::GetConfig();
   G4double hz = config["detector"]["hz"].value_or(750.0) * mm;
 
-  G4Tubs *tube = new G4Tubs(name + "-tube", current_radius,
-                            current_radius + width, hz, 0 * deg, 360 * deg);
+  G4double tolerance = 1.0e-7 * mm;
+  G4Tubs *tube =
+      new G4Tubs(name + "-tube", current_radius + tolerance,
+                 current_radius + width - tolerance, hz, 0 * deg, 360 * deg);
 
   current_radius += width;
 
@@ -216,14 +217,14 @@ void DetectorConstruction::ConstructSDandField() {
   G4MagneticField *magField =
       new G4UniformMagField(G4ThreeVector(0.0, 0.0, strength));
 
-  // TODO: Probably remove
-  static G4Mutex fieldMutex = G4MUTEX_INITIALIZER;
-  G4AutoLock lock(&fieldMutex);
-
   G4FieldManager *fieldManager = new G4FieldManager();
 
   fieldManager->SetDetectorField(magField);
   fieldManager->CreateChordFinder(magField);
+  auto c = fieldManager->GetChordFinder();
+
+  fieldManager->SetDeltaIntersection(1.0e-6 * mm);
+  fieldManager->SetDeltaOneStep(1.0e-6 * mm);
 
   for (G4LogicalVolume *volume : magnetic_requiring_volumes) {
     G4cout << "Adding magnetic field of " << strength << " teslas to "
