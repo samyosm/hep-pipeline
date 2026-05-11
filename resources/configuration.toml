@@ -13,8 +13,8 @@ enabled = true
 magnetic_field_strength = 2.0
 layer_count = 10
 
-active_width = 0.2    # Silicon scintillator
-passivee_width = 14.8 # Galatic Air
+active_width = 0.2   # Silicon scintillator
+passive_width = 14.8 # Galatic Air
 
 active_material = "G4_Si"
 passive_material = "G4_Galactic"
@@ -25,7 +25,7 @@ enabled = true
 width = 350
 
 [detector.ecal]
-enabled = false
+enabled = true
 
 layer_count = 60
 

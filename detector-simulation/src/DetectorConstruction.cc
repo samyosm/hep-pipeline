@@ -216,6 +216,10 @@ void DetectorConstruction::ConstructSDandField() {
   G4MagneticField *magField =
       new G4UniformMagField(G4ThreeVector(0.0, 0.0, strength));
 
+  // TODO: Probably remove
+  static G4Mutex fieldMutex = G4MUTEX_INITIALIZER;
+  G4AutoLock lock(&fieldMutex);
+
   G4FieldManager *fieldManager = new G4FieldManager();
 
   fieldManager->SetDetectorField(magField);

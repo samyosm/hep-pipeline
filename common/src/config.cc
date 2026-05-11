@@ -1,16 +1,14 @@
 #include "config.hh"
-#include "toml.hpp"
 
 namespace hepp {
 
-Config *Config::config_ = nullptr;
+// No need for the pointer initialization here if we use the local static
+// approach Config *Config::config_ = nullptr;
 
 toml::parse_result *Config::GetConfig() {
-  if (config_ == nullptr) {
-    config_ = new Config();
-  }
-
-  return &config_->result_;
+  // This is thread-safe in C++11 and later
+  static Config instance;
+  return &instance.result_;
 }
 
 } // namespace hepp

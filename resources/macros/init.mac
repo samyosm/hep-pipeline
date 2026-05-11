@@ -13,10 +13,9 @@
 /vis/viewer/set/autoRefresh true
 
 # Progress tracking
-/run/printProgress 100
+/run/printProgress 5
 
 # Verbosity
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
-

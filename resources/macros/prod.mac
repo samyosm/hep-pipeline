@@ -4,6 +4,8 @@
 # optimization
 /run/setCut 1.0 mm
 
+/run/eventModulo 1 # NOTE: Fixes a wierd bug, otherwise beamcount has to be less than 80
+
 # verbosity
 /run/verbose 0
 /event/verbose 0
@@ -11,8 +13,8 @@
 /control/verbose 0
 
 # Progress
-/run/printProgress 100
+/run/printProgress 50
 
 # execution
-/run/beamOn 20000 ## NOTE: Should be multiples of 8 (number of cores)
+/run/beamOn 200 # NOTE: Should be multiples of 8 (number of cores)
 
