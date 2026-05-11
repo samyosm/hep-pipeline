@@ -40,8 +40,9 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     analysisManager->FillNtupleDColumn(2, 7, edep);
     analysisManager->AddNtupleRow(2);
 
-    G4cerr << "Track reached maximum step count. Killing ID "
-           << track->GetTrackID() << " at " << track->GetPosition() << G4endl;
+    // G4cerr << "Track reached maximum step count. Killing ID "
+    //        << track->GetTrackID() << " at " << track->GetPosition() <<
+    //        G4endl;
     track->SetTrackStatus(fStopAndKill);
     return;
   }

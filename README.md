@@ -76,19 +76,19 @@ The following energy deposition maps show the detector response in the transvers
 <table align="center">
   <tr>
     <td align="center" width="25%">
-      <img src="docs/assets/detector_energy_map_pdg_11_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_11_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Electron (PDG = 11)</sub>
     </td>
     <td align="center" width="25%">
-      <img src="docs/assets/detector_energy_map_pdg_-11_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_-11_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Positron (PDG = -11)</sub>
     </td>
     <td align="center" width="25%">
-      <img src="docs/assets/detector_energy_map_pdg_13_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_13_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Muon (PDG = 13)</sub>
     </td>
     <td align="center" width="25%">
-      <img src="docs/assets/detector_energy_map_pdg_-13_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_-13_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Anti-muon (PDG = -13)</sub>
     </td>
   </tr>
@@ -99,7 +99,7 @@ The following energy deposition maps show the detector response in the transvers
 <table align="center">
   <tr>
     <td align="center" width="50%">
-      <img src="docs/assets/detector_energy_map_pdg_22_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_22_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Photon (PDG = 22)</sub>
     </td>
   </tr>
@@ -110,11 +110,11 @@ The following energy deposition maps show the detector response in the transvers
 <table align="center">
   <tr>
     <td align="center" width="50%">
-      <img src="docs/assets/detector_energy_map_pdg_211_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_211_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Charged pion π⁺ (PDG = 211)</sub>
     </td>
     <td align="center" width="50%">
-      <img src="docs/assets/detector_energy_map_pdg_-211_tracker_ecal.png" width="100%" /><br/>
+      <img src="docs/assets/detector_energy_map_pdg_-211_tracker_ecal_hcal.png" width="100%" /><br/>
       <sub>Charged pion π⁻ (PDG = -211)</sub>
     </td>
   </tr>
