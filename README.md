@@ -67,26 +67,77 @@ Run the following command to generate various root files (1 for each core) in `d
 ```sh
 ./build/detector-simulation/simulate_detection resources/macros/prod.mac
 ```
+## Results
 
+The following energy deposition maps show the detector response in the transverse plane (XY) for different particle species. The maps use logarithmic energy scaling. The simulation was only run with the tracker and ecal.
+
+### Leptons
 
 <table align="center">
   <tr>
-    <td align="center" width="33%">
-      <img src="docs/assets/tracker.png" width="250" height="250" /><br/>
-      <sub>Tracker only</sub>
+    <td align="center" width="25%">
+      <img src="docs/assets/detector_energy_map_pdg_11_tracker_ecal.png" width="100%" /><br/>
+      <sub>Electron (PDG = 11)</sub>
     </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/tracker+ecal.png" width="250" height="250" /><br/>
-      <sub>Tracker + ECAL</sub>
+    <td align="center" width="25%">
+      <img src="docs/assets/detector_energy_map_pdg_-11_tracker_ecal.png" width="100%" /><br/>
+      <sub>Positron (PDG = -11)</sub>
     </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/tracker+ecal+hcal.png" width="250" height="250" /><br/>
-      <sub>Tracker + ECAL + HCAL</sub>
+    <td align="center" width="25%">
+      <img src="docs/assets/detector_energy_map_pdg_13_tracker_ecal.png" width="100%" /><br/>
+      <sub>Muon (PDG = 13)</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/detector_energy_map_pdg_-13_tracker_ecal.png" width="100%" /><br/>
+      <sub>Anti-muon (PDG = -13)</sub>
     </td>
   </tr>
 </table>
 
+### Electromagnetic Particles
 
+<table align="center">
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/assets/detector_energy_map_pdg_22_tracker_ecal.png" width="100%" /><br/>
+      <sub>Photon (PDG = 22)</sub>
+    </td>
+  </tr>
+</table>
+
+### Hadrons
+
+<table align="center">
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/assets/detector_energy_map_pdg_211_tracker_ecal.png" width="100%" /><br/>
+      <sub>Charged pion π⁺ (PDG = 211)</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/assets/detector_energy_map_pdg_-211_tracker_ecal.png" width="100%" /><br/>
+      <sub>Charged pion π⁻ (PDG = -211)</sub>
+    </td>
+  </tr>
+</table>
+
+### Detectors
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker.png" width="100%" /><br/>
+      <sub>Tracker only</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker+ecal.png" width="100%" /><br/>
+      <sub>Tracker + ECAL</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/tracker+ecal+hcal.png" width="100%" /><br/>
+      <sub>Tracker + ECAL + HCAL</sub>
+    </td>
+  </tr>
+</table>
 
 ## LICENSE
 
