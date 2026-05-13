@@ -12,8 +12,10 @@ def _():
     import ROOT
 
     import marimo as mo
+    import time
+    from datetime import timedelta
 
-    return ROOT, mo, np, plt
+    return ROOT, mo, np, plt, time, timedelta
 
 
 @app.cell
@@ -34,8 +36,10 @@ def _(form):
 
 
 @app.cell
-def _(ROOT, bins, particle_pdg):
+def _(ROOT, bins, particle_pdg, time):
     ROOT.EnableImplicitMT()
+
+    start_time = time.perf_counter()
 
     df = ROOT.RDataFrame("Steps", "data/detector_simulation.root")
 
@@ -48,7 +52,7 @@ def _(ROOT, bins, particle_pdg):
             .Filter(f"PDG == {particle_pdg}")\
             .Histo2D(("h", "", bins, -4000, 4000, bins, -4000, 4000),"X", "Y", "Edep")\
                 .GetValue()
-    return (h,)
+    return h, start_time
 
 
 @app.cell
@@ -90,7 +94,14 @@ def _(H, mo, particle_pdg, plt):
 
 
 @app.cell
-def _():
+def _(mo, start_time, time, timedelta):
+    elapsed = time.perf_counter() - start_time
+
+    mo.md(
+      f"""
+      Time taken: {timedelta(seconds=elapsed)}
+      """
+    )
     return
 
 
