@@ -11,8 +11,8 @@ EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event *event) { fTotalEdep = 0.; }
 void EventAction::EndOfEventAction(const G4Event *event) {
-  auto analysisManager = G4AnalysisManager::Instance();
-  analysisManager->FillNtupleDColumn(0, 0, fTotalEdep);
-  analysisManager->FillNtupleIColumn(0, 1, event->GetEventID());
-  analysisManager->AddNtupleRow(0);
+  // auto analysisManager = G4AnalysisManager::Instance();
+  // analysisManager->FillNtupleDColumn(0, 0, fTotalEdep);
+  // analysisManager->FillNtupleIColumn(0, 1, event->GetEventID());
+  // analysisManager->AddNtupleRow(0);
 }

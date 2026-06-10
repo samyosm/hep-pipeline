@@ -19,7 +19,7 @@ The simulation results for this project are published on Zenodo. This dataset pr
 ## Pipeline Structure
 
 - [x] 1. Event generation
-- [ ] 2. Detector simulation
+- [x] 2. Detector simulation
 - [ ] 3. Digitization
 - [ ] 4. Reconstruction
 - [ ] 5. Analysis

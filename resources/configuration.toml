@@ -1,3 +1,6 @@
+threads = 20
+
+
 [detector]
 world_half_size = 4000         ## mm
 world_material = "G4_Galactic"

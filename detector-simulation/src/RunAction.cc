@@ -29,16 +29,16 @@ RunAction::RunAction() : G4UserRunAction() {
   analysisManager->FinishNtuple();
 
   // 2: Dead tracks
-  analysisManager->CreateNtuple("DeadSteps", "Detectors");
-  analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleSColumn("LayerName");
-  analysisManager->CreateNtupleIColumn("TrackID");
-  analysisManager->CreateNtupleIColumn("PDG");
-  analysisManager->CreateNtupleDColumn("X");
-  analysisManager->CreateNtupleDColumn("Y");
-  analysisManager->CreateNtupleDColumn("Z");
-  analysisManager->CreateNtupleDColumn("Edep");
-  analysisManager->FinishNtuple();
+  // analysisManager->CreateNtuple("DeadSteps", "Detectors");
+  // analysisManager->CreateNtupleIColumn("EventID");
+  // analysisManager->CreateNtupleSColumn("LayerName");
+  // analysisManager->CreateNtupleIColumn("TrackID");
+  // analysisManager->CreateNtupleIColumn("PDG");
+  // analysisManager->CreateNtupleDColumn("X");
+  // analysisManager->CreateNtupleDColumn("Y");
+  // analysisManager->CreateNtupleDColumn("Z");
+  // analysisManager->CreateNtupleDColumn("Edep");
+  // analysisManager->FinishNtuple();
 }
 
 RunAction::~RunAction() {}

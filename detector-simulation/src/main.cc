@@ -5,6 +5,7 @@
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
+#include "config.hh"
 
 int main(int argc, char **argv) {
   G4UIExecutive *ui = nullptr;
@@ -13,7 +14,11 @@ int main(int argc, char **argv) {
   }
 
   auto runManager = G4RunManagerFactory::CreateRunManager();
-  runManager->SetNumberOfThreads(8);
+
+  auto &config = *hepp::Config::GetConfig();
+  G4int threadCount = config["threads"].value_or(1);
+
+  runManager->SetNumberOfThreads(threadCount);
 
   runManager->SetUserInitialization(new DetectorConstruction);
   runManager->SetUserInitialization(new FTFP_BERT);
