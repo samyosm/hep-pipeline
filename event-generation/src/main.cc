@@ -12,6 +12,7 @@ using namespace Pythia8;
 int main() {
   hepp::ensurePythiaData();
   PythiaParallel pythia;
+  // TODO: Make thread count dynamic
   pythia.readString("Parallelism:numThreads = 8");
 
   if (!pythia.readFile("resources/cards/main.cmnd")) {

@@ -1,5 +1,4 @@
-threads = 20
-
+threads = 8
 
 [detector]
 world_half_size = 4000         ## mm

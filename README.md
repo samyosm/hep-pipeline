@@ -11,10 +11,7 @@ The goal of this project is to gain practical, hands-on experience with every st
 
 ## Datasets
 
-The simulation results for this project are published on Zenodo. This dataset provides set of simulated proton-proton events at 13.6 TeV (LHC Run 3 conditions).
-
-**Citation:**
-> Rahmani, S. (2026). HepMC3 Events: Hard QCD with pT greater than 20 GeV in pp Collisions at 13.6 TeV. Zenodo. [https://doi.org/10.5281/zenodo.19960730](https://doi.org/10.5281/zenodo.19960730)
+- Hard QCD with pT greater than 20 GeV in pp Collisions at 13.6 TeV (100k, 50k, 10k and 1k collision events): [https://doi.org/10.5281/zenodo.19960730](https://doi.org/10.5281/zenodo.19960730)
 
 ## Pipeline Structure
 
@@ -59,7 +56,7 @@ mkdir data
 ./build/event-generation/gen_events
 ```
 
-Note: It generates 100,000 events so may produce files up to 23GB in size and take some time. The relevent data can also be downloaded from the published dataset.
+Note: It may take a lot of time and disk space. The relevent data can also be downloaded from the published dataset.
 
 ### Detector simulation
 
@@ -67,9 +64,10 @@ Run the following command to generate various root files (1 for each core) in `d
 ```sh
 ./build/detector-simulation/simulate_detection resources/macros/prod.mac
 ```
+
 ## Results
 
-The following energy deposition maps show the detector response in the transverse plane (XY) for different particle species. The maps use logarithmic energy scaling. The simulation was only run with the tracker and ecal.
+The following energy deposition maps show the detector response in the transverse plane (XY) for different particle species. The maps use logarithmic energy scaling. The simulation was only run with 500 events.
 
 ### Leptons
 
