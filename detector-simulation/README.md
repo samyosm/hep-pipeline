@@ -62,13 +62,13 @@ hadd detector_simulation.root detector_simulation_t*.root
 Each stepping action is recorded with the following data fields:
 
 - Event ID
-- Layer ID
-- Track ID
 - PDG code
 - X position
 - Y position
 - Z position
 - Energy deposited
+- Global time
+
 
 ## Results
 
