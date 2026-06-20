@@ -10,6 +10,7 @@ RunAction::RunAction() : G4UserRunAction() {
   }
 
   analysisManager->CreateNtuple("Steps", "Detectors");
+  analysisManager->CreateNtupleIColumn("EventID");
   analysisManager->CreateNtupleIColumn("LayerID");
   analysisManager->CreateNtupleIColumn("PDG");
   analysisManager->CreateNtupleDColumn("X");
