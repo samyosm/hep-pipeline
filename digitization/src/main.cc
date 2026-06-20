@@ -189,8 +189,9 @@ int main(int argc, char **argv) {
   for (const auto &[cell, agg] : cell_energy_map) {
     double e_visible = agg.total_edep;
 
-    hepp::showProgressBar(current_cell++, total_cells);
-
+    if (current_cell++ % 1000 == 0) {
+      hepp::showProgressBar(current_cell, total_cells);
+    }
     // Gaussian noise too all layers
     double e_smeared = e_visible;
     if (cell.layerID < ecal_layer_start) {
