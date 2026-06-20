@@ -36,13 +36,14 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     auto globalTime = step->GetPreStepPoint()->GetGlobalTime();
 
     auto analysisManager = G4AnalysisManager::Instance();
-    analysisManager->FillNtupleIColumn(0, 0, layerID);    // LayerID
-    analysisManager->FillNtupleIColumn(0, 1, PDG);        // PDG
-    analysisManager->FillNtupleDColumn(0, 2, pos.x());    // X
-    analysisManager->FillNtupleDColumn(0, 3, pos.y());    // Y
-    analysisManager->FillNtupleDColumn(0, 4, pos.z());    // Z
-    analysisManager->FillNtupleDColumn(0, 5, edep);       // Edep
-    analysisManager->FillNtupleDColumn(0, 6, globalTime); // Time
+    analysisManager->FillNtupleIColumn(0, 0, eventID);    // EventID
+    analysisManager->FillNtupleIColumn(0, 1, layerID);    // LayerID
+    analysisManager->FillNtupleIColumn(0, 2, PDG);        // PDG
+    analysisManager->FillNtupleDColumn(0, 3, pos.x());    // X
+    analysisManager->FillNtupleDColumn(0, 4, pos.y());    // Y
+    analysisManager->FillNtupleDColumn(0, 5, pos.z());    // Z
+    analysisManager->FillNtupleDColumn(0, 6, edep);       // Edep
+    analysisManager->FillNtupleDColumn(0, 7, globalTime); // Time
     analysisManager->AddNtupleRow(0);
   }
 }

@@ -8,14 +8,15 @@
 #include <iostream>
 
 struct CellKey {
+  int eventID;
   int layerID;
   int cellX;
   int cellY;
   int cellZ;
 
   bool operator==(const CellKey &other) const {
-    return layerID == other.layerID && cellX == other.cellX &&
-           cellY == other.cellY && cellZ == other.cellZ;
+    return eventID == other.eventID && layerID == other.layerID &&
+           cellX == other.cellX && cellY == other.cellY && cellZ == other.cellZ;
   }
 };
 
@@ -24,18 +25,20 @@ template <> struct hash<CellKey> {
   size_t operator()(const CellKey &k) const {
     size_t h = 0;
     auto combine = [&h](int val) {
-      h ^= std::hash<int>{}(val) + 0x9e3779b9 + (h << 6) + (h >> 2);
+      h ^= std::hash<int>{}(val) + 0x9e3779b9 + (h << 6) + (h >> 2); // cool
     };
     combine(k.layerID);
     combine(k.cellX);
     combine(k.cellY);
     combine(k.cellZ);
+    combine(k.eventID);
     return h;
   }
 };
 } // namespace std
 
 struct HitData {
+  int eventID;
   int layerID;
   int cellX;
   int cellY;
@@ -56,9 +59,11 @@ int main(int argc, char **argv) {
   const double hcal_cell_size_mm =
       100.0; // 100.0 mm (10.0 cm readout matrix grid)
 
-  const double tracker_gain_per_MeV = 100000.0;
-  const double ecal_gain_per_MeV = 4095.0 / 100000.0; // ~0.04095
-  const double hcal_gain_per_MeV = 4095.0 / 500000.0; // ~0.00819
+  const double tracker_gain_per_MeV = 100'000.0;
+  const double ecal_gain_per_MeV =
+      4095.0 / 1'500'000.0; // Expected large values of 1.5 TeV in ECAL
+  const double hcal_gain_per_MeV =
+      4095.0 / 3'000'000.0; // Expected large values of 3 TeV
 
   const double tracker_noise_MeV =
       0.005; // 5 keV intrinsic silicon electronic noise
@@ -86,36 +91,38 @@ int main(int argc, char **argv) {
   auto mapped_df =
       df.Define("Cell_X",
                 [=](int layerID, double x) -> int {
-                  if (layerID < tracker_layer_count)
-                    return std::floor(x / pixel_pitch_x_mm);
-                  if (layerID < hcal_layer_start)
-                    return std::floor(x / ecal_cell_size_mm);
-                  return std::floor(x / hcal_cell_size_mm);
+                  double pitch =
+                      (layerID < tracker_layer_count) ? pixel_pitch_x_mm
+                      : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
+                                                      : hcal_cell_size_mm;
+                  return static_cast<int>(std::floor(x / pitch));
                 },
                 {"LayerID", "X"})
           .Define("Cell_Y",
                   [=](int layerID, double y) -> int {
-                    if (layerID < tracker_layer_count)
-                      return std::floor(y / pixel_pitch_y_mm);
-                    if (layerID < hcal_layer_start)
-                      return std::floor(y / ecal_cell_size_mm);
-                    return std::floor(y / hcal_cell_size_mm);
+                    double pitch =
+                        (layerID < tracker_layer_count) ? pixel_pitch_y_mm
+                        : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
+                                                        : hcal_cell_size_mm;
+                    return static_cast<int>(std::floor(y / pitch));
                   },
                   {"LayerID", "Y"})
           .Define("Cell_Z",
                   [=](int layerID, double z) -> int {
-                    if (layerID < tracker_layer_count)
-                      return std::floor(z / pixel_pitch_z_mm);
-                    if (layerID < hcal_layer_start)
-                      return std::floor(z / ecal_cell_size_mm);
-                    return std::floor(z / hcal_cell_size_mm);
+                    double pitch =
+                        (layerID < tracker_layer_count) ? pixel_pitch_z_mm
+                        : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
+                                                        : hcal_cell_size_mm;
+                    return static_cast<int>(std::floor(z / pitch));
                   },
                   {"LayerID", "Z"})
           .Define("Hit",
-                  [=](int layerID, int x, int y, int z, double e, double t) {
-                    return HitData{layerID, x, y, z, e, t};
+                  [=](int eventID, int layerID, int x, int y, int z, double e,
+                      double t) {
+                    return HitData{eventID, layerID, x, y, z, e, t};
                   },
-                  {"LayerID", "Cell_X", "Cell_Y", "Cell_Z", "Edep", "Time"});
+                  {"EventID", "LayerID", "Cell_X", "Cell_Y", "Cell_Z", "Edep",
+                   "Time"});
 
   // Summing energies per cell
   std::cout << "Aggregating energy deposits per cell" << std::endl;
@@ -127,7 +134,7 @@ int main(int argc, char **argv) {
   using CellMap = std::unordered_map<CellKey, CellAggregate>;
 
   auto aggregator = [](CellMap &acc, const HitData &hit) {
-    CellKey key{hit.layerID, hit.cellX, hit.cellY, hit.cellZ};
+    CellKey key{hit.eventID, hit.layerID, hit.cellX, hit.cellY, hit.cellZ};
 
     acc[key].total_edep += hit.edep;
 
@@ -159,6 +166,7 @@ int main(int argc, char **argv) {
   int out_layerID, out_cellX, out_cellY, out_cellZ, out_adc;
   double out_time;
 
+  out_tree.Branch("EventID", &out_layerID, "EventID/I");
   out_tree.Branch("LayerID", &out_layerID, "LayerID/I");
   out_tree.Branch("Cell_X", &out_cellX, "Cell_X/I");
   out_tree.Branch("Cell_Y", &out_cellY, "Cell_Y/I");
@@ -229,9 +237,11 @@ int main(int argc, char **argv) {
 
     out_tree.Fill();
   }
+
   std::cout << "Writing output file at " << output_file.c_str() << std::endl;
 
   out_tree.Write();
+  out_file.Purge();
   out_file.Close();
 
   return 0;
