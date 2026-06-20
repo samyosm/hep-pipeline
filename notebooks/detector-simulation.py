@@ -11,6 +11,7 @@ def _():
     import uproot
     import ROOT
 
+
     import marimo as mo
     import time
     from datetime import timedelta
@@ -19,10 +20,23 @@ def _():
 
 
 @app.cell
-def _(mo):
-    form = mo.md("{bins} {particle_pdg} (set to 0 for all)").batch(
+def _():
+    from particle import Particle
+
+    relevant_particles = Particle.findall(
+        lambda p: (getattr(p, "lifetime", 0) > 1e-20) 
+    )
+
+    particle_dict = {f"{p.name} ({int(p.pdgid)})": int(p.pdgid) for p in relevant_particles}
+    return Particle, particle_dict
+
+
+@app.cell
+def _(mo, particle_dict):
+    form = mo.md("{bins} {particles} {energy}").batch(
         bins=mo.ui.number(start=0, value=200, label="Bin count"),
-        particle_pdg=mo.ui.number(value=11, label="Particle PDG")
+        particles=mo.ui.multiselect(options=particle_dict, label="Particle PDG"),
+        energy=mo.ui.checkbox(value=False, label="Energy deposit")
     ).form()
     form
     return (form,)
@@ -31,26 +45,30 @@ def _(mo):
 @app.cell
 def _(form):
     bins = form.value["bins"]
-    particle_pdg = form.value["particle_pdg"]
-    return bins, particle_pdg
+    energy = form.value["energy"]
+    particles_pdg = form.value["particles"]
+    return bins, energy, particles_pdg
 
 
 @app.cell
-def _(ROOT, bins, particle_pdg, time):
+def _(ROOT, bins, energy, particle_dict, particles_pdg, time):
     ROOT.EnableImplicitMT()
 
     start_time = time.perf_counter()
 
-    df = ROOT.RDataFrame("Steps", "data/detector_simulation.root")
+    df = ROOT.RDataFrame("Steps", "detector_simulation.root")
 
-    if (particle_pdg == 0):
-        h = df\
-            .Histo2D(("h", "", bins, -4000, 4000, bins, -4000, 4000),"X", "Y", "Edep")\
+    if (len(particles_pdg) == len(particle_dict)):
+        df = df
+    else:
+        filter_expr = " || ".join([f"PDG == {pdg}" for pdg in particles_pdg])
+        df = df.Filter(filter_expr)
+
+    if (energy):
+        h = df.Histo2D(("h", "", bins, -4000, 4000, bins, -4000, 4000),"X", "Y", "Edep")\
                 .GetValue()
     else:
-        h = df\
-            .Filter(f"PDG == {particle_pdg}")\
-            .Histo2D(("h", "", bins, -4000, 4000, bins, -4000, 4000),"X", "Y", "Edep")\
+        h = df.Histo2D(("h", "", bins, -4000, 4000, bins, -4000, 4000),"X", "Y")\
                 .GetValue()
     return h, start_time
 
@@ -69,7 +87,7 @@ def _(h, np):
 
 
 @app.cell
-def _(H, mo, particle_pdg, plt):
+def _(H, Particle, energy, mo, particle_dict, particles_pdg, plt):
     from matplotlib.colors import LogNorm
 
     plt.figure(figsize=(8,6), dpi=300)
@@ -79,14 +97,24 @@ def _(H, mo, particle_pdg, plt):
         aspect="equal",
         origin="lower",
         norm=LogNorm(),
-            cmap="inferno"
+        cmap="inferno",
+        extent=[-4000, 4000, -4000, 4000]
     )
 
+    plt.gca().minorticks_on()
+
+    plt.grid(visible=True, which='major', color='#7f7f7f', linestyle=':', linewidth=0.3, alpha=0.2)
+    plt.grid(visible=True, which='minor', color='#7f7f7f', linestyle=':', linewidth=0.3, alpha=0.2)
+
     plt.colorbar(label="Energy deposit (log scale)")
-    plt.xlabel("X")
-    plt.ylabel("Y")
-    plt.title(f"Detector energy map (XY, PDG = {particle_pdg})")
-    plt.savefig(f"data/detector_energy_map_pdg_{particle_pdg}_tracker_ecal_hcal.png", dpi=1200)
+    plt.xlabel("X (mm)")
+    plt.ylabel("Y (mm)")
+
+    particle_names = [f"${Particle.from_pdgid(pdg).latex_name}$" for pdg in particles_pdg]
+
+    plt.title(f"Detector {'energy' if energy else 'deposit'} map (XY, Particle(s): {'All' if len(particles_pdg) == len(particle_dict) else ', '.join(particle_names)})")
+
+    plt.savefig(f"data/detector_{'energy' if energy else 'deposit'}_map_pdg_{'All' if len(particles_pdg) == len(particle_dict) else '-'.join([Particle.from_pdgid(pdg).programmatic_name for pdg in particles_pdg])}_tracker_ecal_hcal.png", dpi=1200)
 
     ax = mo.ui.matplotlib(plt.gca())
     ax
@@ -102,6 +130,11 @@ def _(mo, start_time, time, timedelta):
       Time taken: {timedelta(seconds=elapsed)}
       """
     )
+    return
+
+
+@app.cell
+def _():
     return
 
 

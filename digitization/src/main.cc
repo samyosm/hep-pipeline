@@ -72,9 +72,13 @@ int main(int argc, char **argv) {
   const double hcal_noise_MeV =
       50.0; // 50 MeV front-end electronics noise floor
 
-  const int tracker_layer_count = 10;
-  const int ecal_layer_count = 60;
-  const int hcal_layer_start = tracker_layer_count + ecal_layer_count;
+  // NOTE: Below is without taking into account the fact layer id are 2i for
+  // active layers and 2i+1 for passive layer const int tracker_layer_count =
+  // 10; const int ecal_layer_count = 60; const int hcal_layer_start =
+  // tracker_layer_count + ecal_layer_count;
+  const int tracker_start = 1;
+  const int ecal_layer_start = 21;
+  const int hcal_layer_start = 141;
 
   ROOT::EnableImplicitMT();
 
@@ -91,28 +95,28 @@ int main(int argc, char **argv) {
   auto mapped_df =
       df.Define("Cell_X",
                 [=](int layerID, double x) -> int {
-                  double pitch =
-                      (layerID < tracker_layer_count) ? pixel_pitch_x_mm
-                      : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
-                                                      : hcal_cell_size_mm;
+                  double pitch = (layerID < ecal_layer_start) ? pixel_pitch_x_mm
+                                 : (layerID < hcal_layer_start)
+                                     ? ecal_cell_size_mm
+                                     : hcal_cell_size_mm;
                   return static_cast<int>(std::floor(x / pitch));
                 },
                 {"LayerID", "X"})
           .Define("Cell_Y",
                   [=](int layerID, double y) -> int {
                     double pitch =
-                        (layerID < tracker_layer_count) ? pixel_pitch_y_mm
-                        : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
-                                                        : hcal_cell_size_mm;
+                        (layerID < ecal_layer_start)   ? pixel_pitch_y_mm
+                        : (layerID < hcal_layer_start) ? ecal_cell_size_mm
+                                                       : hcal_cell_size_mm;
                     return static_cast<int>(std::floor(y / pitch));
                   },
                   {"LayerID", "Y"})
           .Define("Cell_Z",
                   [=](int layerID, double z) -> int {
                     double pitch =
-                        (layerID < tracker_layer_count) ? pixel_pitch_z_mm
-                        : (layerID < hcal_layer_start)  ? ecal_cell_size_mm
-                                                        : hcal_cell_size_mm;
+                        (layerID < ecal_layer_start)   ? pixel_pitch_z_mm
+                        : (layerID < hcal_layer_start) ? ecal_cell_size_mm
+                                                       : hcal_cell_size_mm;
                     return static_cast<int>(std::floor(z / pitch));
                   },
                   {"LayerID", "Z"})
@@ -189,7 +193,7 @@ int main(int argc, char **argv) {
 
     // Gaussian noise too all layers
     double e_smeared = e_visible;
-    if (cell.layerID < tracker_layer_count) {
+    if (cell.layerID < ecal_layer_start) {
       e_smeared += gRand.Gaus(0.0, tracker_noise_MeV);
     } else if (cell.layerID < hcal_layer_start) {
       e_smeared += gRand.Gaus(0.0, ecal_noise_MeV);
@@ -199,7 +203,7 @@ int main(int argc, char **argv) {
 
     // Discretization on all layers
     int adc_val = 0;
-    if (cell.layerID < tracker_layer_count) {
+    if (cell.layerID < ecal_layer_start) {
       adc_val = static_cast<int>(e_smeared * tracker_gain_per_MeV);
     } else if (cell.layerID < hcal_layer_start) {
       adc_val = static_cast<int>(e_smeared * ecal_gain_per_MeV);
@@ -219,10 +223,10 @@ int main(int argc, char **argv) {
     int hcal_cut = static_cast<int>(3.0 * hcal_noise_MeV * hcal_gain_per_MeV);
 
     // Why those values?
-    if (cell.layerID < tracker_layer_count && adc_val <= tracker_cut)
+    if (cell.layerID < ecal_layer_start && adc_val <= tracker_cut)
       continue;
-    if (cell.layerID >= tracker_layer_count &&
-        cell.layerID < hcal_layer_start && adc_val <= ecal_cut)
+    if (cell.layerID >= ecal_layer_start && cell.layerID < hcal_layer_start &&
+        adc_val <= ecal_cut)
       continue;
     if (cell.layerID >= hcal_layer_start && adc_val <= hcal_cut)
       continue;

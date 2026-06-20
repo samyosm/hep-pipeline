@@ -5,9 +5,7 @@
 RunAction::RunAction() : G4UserRunAction() {
   G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("root");
-  if (G4Threading::IsMasterThread()) {
-    analysisManager->SetNtupleMerging(true);
-  }
+  analysisManager->SetNtupleMerging(true);
 
   analysisManager->CreateNtuple("Steps", "Detectors");
   analysisManager->CreateNtupleIColumn("EventID");

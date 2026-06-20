@@ -8,6 +8,7 @@ hz = 3800
 
 inner_chamber_radius = 500
 
+quenching = true
 
 [detector.tracker]
 enabled = true

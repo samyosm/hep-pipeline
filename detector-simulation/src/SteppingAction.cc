@@ -1,9 +1,11 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
+#include "config.hh"
 #include <G4AnalysisManager.hh>
 #include <G4RunManager.hh>
 #include <G4Step.hh>
 #include <G4String.hh>
+#include <G4SystemOfUnits.hh>
 #include <G4VPhysicalVolume.hh>
 #include <G4ios.hh>
 
@@ -37,9 +39,12 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     auto pos = step->GetPreStepPoint()->GetPosition();
     auto globalTime = step->GetPreStepPoint()->GetGlobalTime();
 
+    auto &config = *hepp::Config::GetConfig();
+    auto quenching = config["detector"]["quenching"].value_or(true);
+
     G4double e_quenched = edep;
-    if (layerID >= 10 && edep > 0.0 && stepLength > 0.0) {
-      // dE/dx in MeV/mm
+    // TODO: Remove hardcoding of 21 to ecal start layer ID
+    if (quenching && layerID >= 21 && edep > 0.0 && stepLength > 0.0) {
       G4double dEdx = edep / stepLength;
 
       // TODO: Add to config file
