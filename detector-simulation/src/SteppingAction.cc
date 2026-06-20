@@ -19,6 +19,8 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
       step->GetPreStepPoint()->GetPhysicalVolume();
 
   auto edep = step->GetTotalEnergyDeposit();
+  G4double stepLength = step->GetStepLength();
+
   auto layerName = physicalVolume->GetName();
 
   if (track->GetCurrentStepNumber() > 20000) {
@@ -35,6 +37,18 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     auto pos = step->GetPreStepPoint()->GetPosition();
     auto globalTime = step->GetPreStepPoint()->GetGlobalTime();
 
+    G4double e_quenched = edep;
+    if (layerID >= 10 && edep > 0.0 && stepLength > 0.0) {
+      // dE/dx in MeV/mm
+      G4double dEdx = edep / stepLength;
+
+      // TODO: Add to config file
+      const G4double kB_mm_per_MeV =
+          0.126; // https://geant4-forum.web.cern.ch/t/birks-constant-for-different-materials/1014
+
+      e_quenched = edep / (1.0 + kB_mm_per_MeV * dEdx);
+    }
+
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->FillNtupleIColumn(0, 0, eventID);    // EventID
     analysisManager->FillNtupleIColumn(0, 1, layerID);    // LayerID
@@ -42,7 +56,7 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     analysisManager->FillNtupleDColumn(0, 3, pos.x());    // X
     analysisManager->FillNtupleDColumn(0, 4, pos.y());    // Y
     analysisManager->FillNtupleDColumn(0, 5, pos.z());    // Z
-    analysisManager->FillNtupleDColumn(0, 6, edep);       // Edep
+    analysisManager->FillNtupleDColumn(0, 6, e_quenched); // Edep
     analysisManager->FillNtupleDColumn(0, 7, globalTime); // Time
     analysisManager->AddNtupleRow(0);
   }
