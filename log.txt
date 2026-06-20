@@ -1,0 +1,6 @@
+[ 20%] Built target hepp_utils
+[ 33%] Built target gen_events
+[ 40%] Building CXX object digitization/CMakeFiles/digitize.dir/src/main.cc.o
+[ 93%] Built target simulate_detection
+[100%] Linking CXX executable digitize
+[100%] Built target digitize

@@ -1,7 +1,7 @@
 project(Digitization)
 
-find_package(HepMC3 REQUIRED)
-include_directories(${HEPMC3_INCLUDE_DIRS})
+find_package(ROOT REQUIRED)
+include(${ROOT_USE_FILE})
 
 set(SOURCES
     src/main.cc
@@ -15,4 +15,5 @@ target_include_directories(digitize PRIVATE
 
 target_link_libraries(digitize PRIVATE
     hepp_utils
+    ${ROOT_LIBRARIES}
 )
