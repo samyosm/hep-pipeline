@@ -22,11 +22,15 @@ struct CellKey {
 namespace std {
 template <> struct hash<CellKey> {
   size_t operator()(const CellKey &k) const {
-    size_t h1 = std::hash<int>{}(k.layerID);
-    size_t h2 = std::hash<int>{}(k.cellX);
-    size_t h3 = std::hash<int>{}(k.cellY);
-    size_t h4 = std::hash<int>{}(k.cellZ);
-    return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3);
+    size_t h = 0;
+    auto combine = [&h](int val) {
+      h ^= std::hash<int>{}(val) + 0x9e3779b9 + (h << 6) + (h >> 2);
+    };
+    combine(k.layerID);
+    combine(k.cellX);
+    combine(k.cellY);
+    combine(k.cellZ);
+    return h;
   }
 };
 } // namespace std
@@ -132,7 +136,7 @@ int main(int argc, char **argv) {
     }
   };
 
-  auto merger = [](CellMap target, const CellMap &source) {
+  auto merger = [](CellMap &target, const CellMap &source) {
     for (const auto &[key, src_agg] : source) {
       auto &tgt_agg = target[key];
       tgt_agg.total_edep += src_agg.total_edep;
