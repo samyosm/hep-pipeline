@@ -228,7 +228,6 @@ int main(int argc, char **argv) {
 
   digitized_df.Snapshot(
       "Digits", output_file,
-      {"EventID", "LayerID", "CellX", "CellY", "CellZ", "ADC", "Time"});
-
+      {"EventID", "LayerID", "Cell_X", "Cell_Y", "Cell_Z", "ADC", "Time"});
   return 0;
 }
