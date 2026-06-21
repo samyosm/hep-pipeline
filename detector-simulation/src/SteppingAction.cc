@@ -54,15 +54,12 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
       e_quenched = edep / (1.0 + kB_mm_per_MeV * dEdx);
     }
 
-    auto analysisManager = G4AnalysisManager::Instance();
-    analysisManager->FillNtupleIColumn(0, 0, eventID);    // EventID
-    analysisManager->FillNtupleIColumn(0, 1, layerID);    // LayerID
-    analysisManager->FillNtupleIColumn(0, 2, PDG);        // PDG
-    analysisManager->FillNtupleDColumn(0, 3, pos.x());    // X
-    analysisManager->FillNtupleDColumn(0, 4, pos.y());    // Y
-    analysisManager->FillNtupleDColumn(0, 5, pos.z());    // Z
-    analysisManager->FillNtupleDColumn(0, 6, e_quenched); // Edep
-    analysisManager->FillNtupleDColumn(0, 7, globalTime); // Time
-    analysisManager->AddNtupleRow(0);
+    fEventAction->fLayerIDs.push_back(layerID);
+    fEventAction->fPDGs.push_back(PDG);
+    fEventAction->fXs.push_back(pos.x());
+    fEventAction->fYs.push_back(pos.y());
+    fEventAction->fZs.push_back(pos.z());
+    fEventAction->fEdeps.push_back(e_quenched);
+    fEventAction->fTimes.push_back(globalTime);
   }
 }

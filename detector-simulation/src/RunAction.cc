@@ -1,21 +1,24 @@
 #include "RunAction.hh"
+#include "EventAction.hh"
 #include "G4AnalysisManager.hh"
 #include "G4UserRunAction.hh"
 
-RunAction::RunAction() : G4UserRunAction() {
+RunAction::RunAction(EventAction *eventAction)
+    : G4UserRunAction(), fEventAction(eventAction) {
+
   G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("root");
   analysisManager->SetNtupleMerging(true);
 
-  analysisManager->CreateNtuple("Steps", "Detectors");
+  analysisManager->CreateNtuple("Steps", "Detector Simulation Steps");
   analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleIColumn("LayerID");
-  analysisManager->CreateNtupleIColumn("PDG");
-  analysisManager->CreateNtupleDColumn("X");
-  analysisManager->CreateNtupleDColumn("Y");
-  analysisManager->CreateNtupleDColumn("Z");
-  analysisManager->CreateNtupleDColumn("Edep");
-  analysisManager->CreateNtupleDColumn("Time");
+  analysisManager->CreateNtupleIColumn("LayerID", fEventAction->fLayerIDs);
+  analysisManager->CreateNtupleIColumn("PDG", fEventAction->fPDGs);
+  analysisManager->CreateNtupleDColumn("X", fEventAction->fXs);
+  analysisManager->CreateNtupleDColumn("Y", fEventAction->fYs);
+  analysisManager->CreateNtupleDColumn("Z", fEventAction->fZs);
+  analysisManager->CreateNtupleDColumn("Edep", fEventAction->fEdeps);
+  analysisManager->CreateNtupleDColumn("Time", fEventAction->fTimes);
   analysisManager->FinishNtuple();
 }
 

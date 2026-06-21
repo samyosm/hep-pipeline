@@ -9,17 +9,17 @@ ActionInitialization::ActionInitialization() : G4VUserActionInitialization() {}
 ActionInitialization::~ActionInitialization() {}
 
 void ActionInitialization::BuildForMaster() const {
-  SetUserAction(new RunAction());
+  SetUserAction(new RunAction(nullptr));
 }
 
 void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
 
-  RunAction *runAction = new RunAction();
-  SetUserAction(runAction);
-
   EventAction *eventAction = new EventAction();
   SetUserAction(eventAction);
+
+  RunAction *runAction = new RunAction(eventAction);
+  SetUserAction(runAction);
 
   SteppingAction *steppingAction = new SteppingAction(eventAction);
   SetUserAction(steppingAction);
