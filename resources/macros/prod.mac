@@ -16,5 +16,5 @@
 /run/printProgress 10
 
 # execution
-/run/beamOn 50 
+/run/beamOn 1000 
 

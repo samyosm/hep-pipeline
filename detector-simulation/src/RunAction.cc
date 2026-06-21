@@ -10,7 +10,7 @@ RunAction::RunAction(EventAction *eventAction)
   analysisManager->SetDefaultFileType("root");
 
   analysisManager->SetNtupleMerging(true);
-
+  analysisManager->SetNtupleRowWise(false, false);
   analysisManager->SetBasketSize(32 * 1024);
 
   analysisManager->CreateNtuple("Steps", "Detector Simulation Steps");
