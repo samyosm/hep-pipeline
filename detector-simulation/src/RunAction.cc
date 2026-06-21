@@ -8,7 +8,10 @@ RunAction::RunAction(EventAction *eventAction)
 
   G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("root");
+
   analysisManager->SetNtupleMerging(true);
+
+  analysisManager->SetBasketSize(32 * 1024);
 
   analysisManager->CreateNtuple("Steps", "Detector Simulation Steps");
   analysisManager->CreateNtupleIColumn("EventID");

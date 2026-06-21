@@ -1,5 +1,3 @@
-#include "TFile.h"
-#include "TTree.h"
 #include "config.hh"
 #include "utils.hpp"
 #include <ROOT/RDF/InterfaceUtils.hxx>
@@ -57,11 +55,9 @@ int main(int argc, char **argv) {
   const double hcal_cell_size_mm =
       100.0; // 100.0 mm (10.0 cm readout matrix grid)
 
-  const double tracker_gain_per_MeV = 100'000.0;
-  const double ecal_gain_per_MeV =
-      4095.0 / 1'500'000.0; // Expected large values of 1.5 TeV in ECAL
-  const double hcal_gain_per_MeV =
-      4095.0 / 3'000'000.0; // Expected large values of 3 TeV
+  const double tracker_gain_per_MeV = 100.0;
+  const double ecal_gain_per_MeV = 4095.0 / 5'000.0;
+  const double hcal_gain_per_MeV = 4095.0 / 3'000.0;
 
   const double tracker_noise_MeV =
       0.005; // 5 keV intrinsic silicon electronic noise
@@ -133,7 +129,8 @@ int main(int argc, char **argv) {
                   min_time = 1e9;
                 }
 
-                total_edep += edeps[i];
+                // NOTE: Converting GeV to MeV
+                total_edep += edeps[i] * 1000.0;
                 if (times[i] < min_time) {
                   min_time = times[i];
                 }
