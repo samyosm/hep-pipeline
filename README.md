@@ -169,4 +169,4 @@ The following energy deposition maps show the detector response in the transvers
 
 ## LICENSE
 
-[MIT](https://www.google.com/search?q=LICENSE) © Samy Rahmani
+[MIT](LICENSE) © Samy Rahmani
